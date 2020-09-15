@@ -479,8 +479,10 @@ class BaselineControl(BMIControlMulti):
 #########################
 ######## Simulation tasks
 #########################
-from features.simulation_features import SimKalmanEnc, SimKFDecoderSup, SimCosineTunedEnc
+from features.simulation_features import SimKalmanEnc, SimKFDecoderSup, SimCosineTunedEnc, SimFAEnc
 from riglib.bmi.feedback_controllers import LQRController
+
+
 class SimBMIControlMulti(SimCosineTunedEnc, SimKFDecoderSup, BMIControlMulti):
     win_res = (250, 140)
     sequence_generators = ['sim_target_seq_generator_multi']
@@ -528,3 +530,34 @@ class SimBMIControlMulti(SimCosineTunedEnc, SimKFDecoderSup, BMIControlMulti):
             targ = targets[target_inds[k], :]
             yield np.array([[center[0], 0, center[1]],
                             [targ[0], 0, targ[1]]])        
+
+#sim to the 1 abov
+#but swap out the simCosENv for SimFAEnc
+#use t same sim_seq alright. 
+class SimBMIControlMultiFAEnc(SimFAEnc, SimKFDecoderSup, BMIControlMulti):
+    win_res = (250, 140)
+    sequence_generators = ['sim_target_seq_generator_multi']
+    def __init__(self, *args, **kwargs):
+        from riglib.bmi.state_space_models import StateSpaceEndptVel2D
+        ssm = StateSpaceEndptVel2D()
+        
+        if 'sim_C'  in kwargs:
+            self.sim_C = kwargs['sim_C']
+        if 'assist_level' in kwargs:
+            self.assist_level = kwargs['assist_level']
+
+        A, B, W = ssm.get_ssm_matrices()
+        Q = np.mat(np.diag([1., 1, 1, 0, 0, 0, 0]))
+        R = 10000*np.mat(np.diag([1., 1., 1.]))
+        self.fb_ctrl = LQRController(A, B, Q, R)
+
+        self.ssm = ssm
+        super(SimBMIControlMultiFAEnc, self).__init__(*args, **kwargs)
+
+
+    def _start_wait(self):
+        self.wait_time = 0.
+        super()._start_wait()
+
+    def _test_start_trial(self, ts):
+        return ts > self.wait_time and not self.pause
