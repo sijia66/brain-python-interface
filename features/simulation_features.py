@@ -468,3 +468,34 @@ class SimPPFDecoderCursorShuffled(object):
         # self._init_neural_encoder()
 
         self.decoder = train._train_PPFDecoder_sim_known_beta(self.beta_full[inds], self.encoder.units, dt=1./180)
+
+
+# add change the decoding parames in the middle of a simulation, eh
+#hard coded to change sim_c after some trials
+
+class BMISimExpTuner():
+    change_at_reward = 3
+    def __init__(self, *args,**kwargs):
+        self._reward_count = 0
+        self.change_sim_c = False
+        super().__init__(*args,**kwargs)
+    
+    def  _cycle(self):
+        #let the parent run and we figure out the rest
+        super()._cycle()
+       
+
+        #for now, just change sim_c
+        #nd to update som decoders
+        if self.state == 'reward': 
+            self._reward_count += 1
+            print(f"reward count at {self._reward_count} and the state is {self.state}")
+            print(" ")
+        
+        self.change_sim_c == True if self._reward_count == self.change_at_reward else False
+        
+        if self.change_sim_c:
+            print('changed sim_c')
+            #need to update/init dec
+            
+        
