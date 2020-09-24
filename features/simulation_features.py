@@ -484,18 +484,14 @@ class BMISimExpTuner():
         #let the parent run and we figure out the rest
         super()._cycle()
        
-
         #for now, just change sim_c
         #nd to update som decoders
         if self.state == 'reward': 
             self._reward_count += 1
-            print(f"reward count at {self._reward_count} and the state is {self.state}")
-            print(" ")
         
-        self.change_sim_c == True if self._reward_count == self.change_at_reward else False
+        self.change_sim_c = True if self._reward_count == self.change_at_reward else False
         
         if self.change_sim_c:
             print('changed sim_c')
-            #need to update/init dec
             
         
