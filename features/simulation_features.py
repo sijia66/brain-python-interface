@@ -472,12 +472,30 @@ class SimPPFDecoderCursorShuffled(object):
 
 # add change the decoding parames in the middle of a simulation, eh
 #hard coded to change sim_c after some trials
+# To-DO
+#actually change to succuss count
+#change this to a bit more flexible format
 
 class BMISimExpTuner():
     change_at_reward = 3
     def __init__(self, *args,**kwargs):
+        """
+        sim_c_change_list; list of tuples:
+            each tuple has two elements":
+            position 0: at which reward state to change
+            position 1: the new sim_c encoding array.  
+
+        """
         self._reward_count = 0
         self.change_sim_c = False
+        self.sim_c_change_list = kwargs['sim_c_change_list'] if 'sim_c_change_list' in kwargs else None
+        
+        if self.sim_c_change_list is not None:
+            self.sim_c_gen = (state_sim_C for state_sim_C in self.sim_c_change_list)
+            self.target_state_sim_c = next(self.sim_c_gen )
+            self.change_at_reward = self.target_state_sim_c[0]
+
+        
         super().__init__(*args,**kwargs)
     
     def  _cycle(self):
@@ -490,8 +508,28 @@ class BMISimExpTuner():
             self._reward_count += 1
         
         self.change_sim_c = True if self._reward_count == self.change_at_reward else False
-        
-        if self.change_sim_c:
-            print('changed sim_c')
+        if self.change_sim_c: self._change_enc()
+
+
+    def _change_enc(self):
+        if self.sim_c_change_list is None: return
+
+        #assign new sim_c
+        # and then update
+        self.sim_c = self.target_state_sim_c[1]
+        self._init_neural_encoder()
+
+        #prepare for next update
+        self.target_state_sim_c = next(self.sim_c_gen )
+        self.change_at_reward = self.target_state_sim_c[0]
+
+
+
+
+            
+
+
+
+
             
         
