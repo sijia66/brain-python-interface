@@ -9,8 +9,6 @@ import numpy as np
 import fnmatch
 import os, sys
 import subprocess
-from riglib import calibrations, bmi
-from riglib.bmi import extractor
 from riglib.experiment import traits
 
 
