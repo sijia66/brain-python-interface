@@ -46,3 +46,6 @@ tests/*.hdf
 *.h5
 *.dot
 python_logging.log
+db_classes.png
+riglib_classes.png
+.gitignore
