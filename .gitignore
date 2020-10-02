@@ -49,3 +49,5 @@ python_logging.log
 db_classes.png
 riglib_classes.png
 .gitignore
+riglib_classes_before_trimming.png
+riglib_after_classes.png
