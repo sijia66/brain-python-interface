@@ -1,4 +1,0 @@
-#!/bin/bash
-# print the git hash of the current code
-cd $HOME/code/bmi3d
-git rev-parse --short HEAD
