@@ -486,14 +486,28 @@ class BMISimExpTuner():
             position 1: the new sim_c encoding array.  
 
         """
+        #set up debug mode 
+        self._debug = kwargs['debug_mode'] if 'debug_mode' in kwargs.keys() else True
+
         self._reward_count = 0
         self.change_sim_c = False
-        self.sim_c_change_list = kwargs['sim_c_change_list'] if 'sim_c_change_list' in kwargs else None
+
+        #assign change list
+        if self._debug: print(f'printing from simulation_features {kwargs}')
+        self.sim_c_change_list = kwargs['sim_c_change_list'] if 'sim_c_change_list' in kwargs.keys() else None
         
+
+        if self._debug: print(f'printing from BMIEXPTuner  {self.sim_c_change_list}')
         if self.sim_c_change_list is not None:
             self.sim_c_gen = (state_sim_C for state_sim_C in self.sim_c_change_list)
             self.target_state_sim_c = next(self.sim_c_gen )
             self.change_at_reward = self.target_state_sim_c[0]
+
+            if self._debug: 
+                print(self.sim_c_gen)
+                print(type(self.sim_c_gen))
+                print(f'target state sin {self.target_state_sim_c }')
+                print(' ')
 
         
         super().__init__(*args,**kwargs)
@@ -508,7 +522,10 @@ class BMISimExpTuner():
             self._reward_count += 1
         
         self.change_sim_c = True if self._reward_count == self.change_at_reward else False
+        if self._debug: print(f'change_sim_c: {self.change_sim_c} \n\n')
+
         if self.change_sim_c: self._change_enc()
+
 
 
     def _change_enc(self):
@@ -520,8 +537,11 @@ class BMISimExpTuner():
         self._init_neural_encoder()
 
         #prepare for next update
-        self.target_state_sim_c = next(self.sim_c_gen )
-        self.change_at_reward = self.target_state_sim_c[0]
+        try:
+            self.target_state_sim_c = next(self.sim_c_gen )
+            self.change_at_reward = self.target_state_sim_c[0]
+        except:
+            print('cannot change current state')
 
 
 

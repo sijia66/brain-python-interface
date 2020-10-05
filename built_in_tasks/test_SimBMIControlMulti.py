@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
     #generate task params
     N_TARGETS = 8
-    N_TRIALS = 4
+    N_TRIALS = 6
     seq = SimBMIControlMulti.sim_target_seq_generator_multi(
         N_TARGETS, N_TRIALS)
 
@@ -69,7 +69,20 @@ if __name__ == "__main__":
     #feats = [SaveHDF, BMISimExpTuner]
     #feats = [SaveHDF]
     feats = [BMISimExpTuner]
-    
+
+
+
+    #configure params changes
+    sim_c_change_list = [
+        (2, sim_C),
+        (4, sim_C)
+    ]
+    kwargs['sim_c_change_list'] = sim_c_change_list
+
+    #add debug option
+    debug_mode = True
+    kwargs['debug_mode'] = True
+
     Exp = experiment.make(base_class, feats=feats)
     print(Exp)
 
