@@ -489,7 +489,7 @@ class BMISimExpTuner():
         #set up debug mode 
         self._debug = kwargs['debug_mode'] if 'debug_mode' in kwargs.keys() else True
 
-        self._reward_count = 0
+        self._reward_count = 1
         self.change_sim_c = False
 
         #assign change list
@@ -515,17 +515,33 @@ class BMISimExpTuner():
     def  _cycle(self):
         #let the parent run and we figure out the rest
         super()._cycle()
-       
         #for now, just change sim_c
         #nd to update som decoders
-        if self.state == 'reward': 
-            self._reward_count += 1
+
+    #only do this at a start of a target reach trial
+    #FSM will call this fxn
+
+    def _start_target(self):
+        super()._start_target()
+
         
         self.change_sim_c = True if self._reward_count == self.change_at_reward else False
-        if self._debug: print(f'change_sim_c: {self.change_sim_c} \n\n')
+        
+        if self.change_sim_c: 
+            
+            print(f'from tuner._start_target {self._reward_count}')
+            print(f'tuner:_start_reward {self.change_sim_c}')
 
-        if self.change_sim_c: self._change_enc()
+            self._change_enc()
 
+            #prepare for next update
+            try:
+                self.target_state_sim_c = next(self.sim_c_gen)
+                self.change_at_reward = self.target_state_sim_c[0]
+            except:
+                print('cannot change  target state anymore')
+
+        self._reward_count += 1
 
 
     def _change_enc(self):
@@ -536,12 +552,7 @@ class BMISimExpTuner():
         self.sim_c = self.target_state_sim_c[1]
         self._init_neural_encoder()
 
-        #prepare for next update
-        try:
-            self.target_state_sim_c = next(self.sim_c_gen )
-            self.change_at_reward = self.target_state_sim_c[0]
-        except:
-            print('cannot change current state')
+
 
 
 
