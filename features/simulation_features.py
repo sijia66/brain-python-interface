@@ -489,7 +489,7 @@ class BMISimExpTuner():
         #set up debug mode 
         self._debug = kwargs['debug_mode'] if 'debug_mode' in kwargs.keys() else True
 
-        self._reward_count = 1
+        self._reward_count = 0
         self.change_sim_c = False
 
         #assign change list
@@ -521,14 +521,15 @@ class BMISimExpTuner():
     #only do this at a start of a target reach trial
     #FSM will call this fxn
 
-    def _start_target(self):
-        super()._start_target()
+    def _start_wait(self):
+        super()._start_wait()
 
         
+        if self._debug: print('target reach:' + str(self._reward_count))
         self.change_sim_c = True if self._reward_count == self.change_at_reward else False
         
         if self.change_sim_c: 
-            
+            print('')
             print(f'from tuner._start_target {self._reward_count}')
             print(f'tuner:_start_reward {self.change_sim_c}')
 
@@ -551,6 +552,14 @@ class BMISimExpTuner():
         # and then update
         self.sim_c = self.target_state_sim_c[1]
         self._init_neural_encoder()
+
+        #print out the new encoder
+        if self._debug:
+            print('')
+            print('the new encoder matrix:')
+            print(self.sim_c)
+            print('')
+            
 
 
 
