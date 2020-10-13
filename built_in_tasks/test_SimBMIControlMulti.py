@@ -66,16 +66,23 @@ if __name__ == "__main__":
 
     #base_class = SimBMIControlMulti
     base_class = SimBMIControlMultiFAEnc
-    #feats = [SaveHDF, BMISimExpTuner]
+    feats = [SaveHDF, BMISimExpTuner]
     #feats = [SaveHDF]
-    feats = [BMISimExpTuner]
+    #feats = [BMISimExpTuner]
 
 
 
     #configure params changes
+    sim_C_new = np.zeros((N_NEURONS, N_STATES))
+    sim_C_new[0, :] = np.array([0, 0, 0, 0, 1, 0, 0])
+    sim_C_new[1, :] = np.array([0, 0, 0, 0, -1, 0, 0])
+    # control z positive directions
+    sim_C_new[2, :] = np.array([0, 0, 0, 1, 0, 0, 0])
+    sim_C_new[3, :] = np.array([0, 0, 0, -1, 0, 0, 0])
+
+
     sim_c_change_list = [
-        (2, sim_C),
-        (4, sim_C)
+        (3, sim_C_new)#just saying to change the sim_c at the start of the trial index 3 (half way through)
     ]
     kwargs['sim_c_change_list'] = sim_c_change_list
 

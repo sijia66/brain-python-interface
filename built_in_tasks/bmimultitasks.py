@@ -528,6 +528,7 @@ class SimBMIControlMulti(SimCosineTunedEnc, SimKFDecoderSup, BMIControlMulti):
         target_inds[0:n_targs] = np.arange(min(n_targs, n_trials))
         for k in range(n_trials):
             targ = targets[target_inds[k], :]
+            print('seq:'+ str(k))
             yield np.array([[center[0], 0, center[1]],
                             [targ[0], 0, targ[1]]])        
 
