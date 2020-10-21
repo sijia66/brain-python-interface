@@ -1,6 +1,6 @@
 from bmimultitasks import SimBMIControlMulti, SimBMIControlMultiFAEnc
 from features import SaveHDF
-from features.simulation_features import BMISimExpTuner
+from features.simulation_features import BMISimExpTuner, SimKFDecoderSup, SimTime
 import numpy as np
 from riglib import experiment
 import time
@@ -61,14 +61,15 @@ if __name__ == "__main__":
     kwargs = dict()
     # set up assist level
     assist_level = (0.1, 0.1)
-    kwargs['sim_C'] = sim_C
-    kwargs['assist_level'] = assist_level
+
 
     #base_class = SimBMIControlMulti
     base_class = SimBMIControlMultiFAEnc
-    feats = [SaveHDF, BMISimExpTuner]
-    #feats = [SaveHDF]
+    #feats = [SaveHDF, BMISimExpTuner]
+    feats = [SaveHDF]
     #feats = [BMISimExpTuner]
+    #feats = [SaveHDF ]
+    #feats =  [SimKFDecoderSup]
 
 
 
@@ -84,6 +85,9 @@ if __name__ == "__main__":
     sim_c_change_list = [
         (3, sim_C_new)#just saying to change the sim_c at the start of the trial index 3 (half way through)
     ]
+
+    kwargs['sim_C'] = sim_C
+    kwargs['assist_level'] = assist_level
     kwargs['sim_c_change_list'] = sim_c_change_list
 
     #add debug option

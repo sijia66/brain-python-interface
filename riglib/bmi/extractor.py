@@ -732,6 +732,9 @@ class SimBinnedSpikeCountsExtractor(BinnedSpikeCountsExtractor):
         '''
         current_state = self.task.get_current_state()
         target_state = self.task.get_target_BMI_state()
+        print('sim_extracter')
+        print()
+        
         ctrl = self.input_device.calc_next_state(current_state, target_state)
         #print current_state.T, target_state.T, ctrl.T
         self.sim_ctrl = ctrl
