@@ -380,6 +380,9 @@ class SimKFDecoderSup(SimKFDecoder):
             self.init_neural_features = spike_counts
             self.init_kin_features = kin
 
+            print_matrix(self.encoder.C,  'encoder.C')
+            print_matrix(self.decoder.filt.C, 'decoder.filt.C')
+
             super(SimKFDecoderSup, self).load_decoder()
 
 
@@ -564,7 +567,12 @@ class BMISimExpTuner():
 
 
 
+def print_matrix(m, mat_name = ''):
+    print('\n')
+    print(f'below is {mat_name}')
+    print(m)
 
+    print('\n')
 
             
 
