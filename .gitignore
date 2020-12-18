@@ -46,3 +46,4 @@ tests/*.hdf
 *.h5
 *.dot
 python_logging.log
+*.png

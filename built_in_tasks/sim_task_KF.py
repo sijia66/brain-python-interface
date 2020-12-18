@@ -3,6 +3,7 @@ from test_SimBMIControlMulti import get_enc_setup
 
 from features import SaveHDF
 from riglib import experiment
+from features.stream_task_code import TaskCodeStreamer
 
 import time
 import numpy as np
@@ -30,7 +31,7 @@ if __name__ == "__main__":
 
     #base_class = SimBMIControlMulti
     base_class = SimBMIControlMulti
-    feats = [SaveHDF]
+    feats = [SaveHDF, TaskCodeStreamer]
 
     #sav everthing in a kw
     kwargs = dict()
